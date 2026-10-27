@@ -60,13 +60,13 @@
           ...
         }:
         {
-          options.programs.direnv-gcp.enable = lib.mkEnableOption "the direnv-gcp helpers";
+          options.programs.direnv.contrib.gcp.enable = lib.mkEnableOption "the direnv-gcp helpers";
 
-          config = lib.mkIf config.programs.direnv-gcp.enable {
+          config = lib.mkIf config.programs.direnv.contrib.gcp.enable {
             assertions = [
               {
                 assertion = config.programs.direnv.enable;
-                message = "programs.direnv-gcp.enable requires programs.direnv.enable = true";
+                message = "programs.direnv.contrib.gcp.enable requires programs.direnv.enable = true";
               }
             ];
 
