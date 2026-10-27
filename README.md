@@ -40,7 +40,7 @@ inputs.direnv-gcp.url = "github:direnv-contrib/direnv-gcp";
 With Home Manager, import the module and enable it. It sources the scripts from direnv's standard library, so `programs.direnv.enable` must be on as well:
 
 ```nix
-imports = [ inputs.direnv-gcp.homeManagerModules.default ];
+imports = [ inputs.direnv-gcp.homeModules.default ];
 
 programs.direnv-gcp.enable = true;
 ```
