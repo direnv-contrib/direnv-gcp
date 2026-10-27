@@ -31,27 +31,33 @@ direnv loads every `*.sh` file in `~/.config/direnv/lib/` before it evaluates a 
 
 ### Using Nix
 
-Add the flake as an input, and install its package:
+Add the flake as an input:
 
 ```nix
 inputs.direnv-gcp.url = "github:direnv-contrib/direnv-gcp";
 ```
 
+With Home Manager, import the module and enable it. It sources the scripts from direnv's standard library, so `programs.direnv.enable` must be on as well:
+
+```nix
+imports = [ inputs.direnv-gcp.homeManagerModules.default ];
+
+programs.direnv-gcp.enable = true;
+```
+
+Without Home Manager, install the package, which places the scripts in `share/direnv-gcp`:
+
 ```nix
 environment.systemPackages = [ inputs.direnv-gcp.packages.${system}.default ];
 ```
 
-The package places the scripts in `share/direnv-gcp`. With Home Manager managing direnv, source them from the standard library:
+Then source them from the standard library with a loop in `~/.config/direnv/lib/direnv-gcp.sh`, pointing at the package path:
 
-```nix
-programs.direnv.stdlib = ''
-  for lib in ${inputs.direnv-gcp.packages.${system}.default}/share/direnv-gcp/*.sh; do
-    source "$lib"
-  done
-'';
+```bash
+for lib in /path/to/direnv-gcp/share/direnv-gcp/*.sh; do
+  source "$lib"
+done
 ```
-
-If you manage `~/.config/direnv` yourself, put the same loop in `~/.config/direnv/lib/direnv-gcp.sh`, pointing at the package path.
 
 ### Manual
 
@@ -113,6 +119,7 @@ The tests stub `gcloud` with a shell function and load direnv's own standard lib
 | Repo | What it provides |
 |------|-----------------|
 | [direnv-aws](https://github.com/direnv-contrib/direnv-aws) | AWS Secrets Manager and SSM Parameter Store for direnv |
+| [direnv-az](https://github.com/direnv-contrib/direnv-az) | Azure Key Vault and subscription selection for direnv |
 | **direnv-gcp** ← you are here | Google Secret Manager and project selection for direnv |
 | [direnv-op](https://github.com/direnv-contrib/direnv-op) | 1Password secrets and items for direnv |
 
