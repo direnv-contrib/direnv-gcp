@@ -4,7 +4,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE) [![CI](https://github.com/direnv-contrib/direnv-gcp/actions/workflows/ci.yml/badge.svg)](https://github.com/direnv-contrib/direnv-gcp/actions/workflows/ci.yml)
 
-Stop copying secrets into `.env` files. `direnv-gcp` adds two functions to your `.envrc`: `use_gcp_secret` reads Google Secret Manager secrets when you enter a directory and exports them as environment variables, and `use_gcp_project` points `gcloud` and the client libraries at the right project for that directory.
+Stop copying secrets into `.env` files. `direnv-gcp` adds two functions to your `.envrc`: `use gcp_secret` reads Google Secret Manager secrets when you enter a directory and exports them as environment variables, and `use gcp_project` points `gcloud` and the client libraries at the right project for that directory.
 
 ## Requirements
 
@@ -80,24 +80,24 @@ direnv fetchurl https://raw.githubusercontent.com/direnv-contrib/direnv-gcp/v0.1
 
 ```bash
 source_url "https://raw.githubusercontent.com/direnv-contrib/direnv-gcp/v0.1.0/lib/gcp_secret.sh" "sha256-…"
-use_gcp_secret db-creds
+use gcp_secret db-creds
 ```
 
 Replace `v0.1.0` with the release you want. direnv refuses to load a file whose content does not match the hash, so a tag that is later changed cannot swap the code under you.
 
 ## Usage
 
-Call the functions from a `.envrc`:
+Call the helpers from a `.envrc` with direnv's `use`. Each helper is a function named `use_<name>`, and `use <name>` calls it:
 
 ```bash
-use_gcp_project my-project            # gcloud and client libraries use this project
+use gcp_project my-project            # gcloud and client libraries use this project
 
-use_gcp_secret db-creds               # JSON secret: one variable per key
-use_gcp_secret DB_URL=db-url          # the raw secret string, with an explicit name
-use_gcp_secret api-token@3            # a specific version, the default is latest
+use gcp_secret db-creds               # JSON secret: one variable per key
+use gcp_secret DB_URL=db-url          # the raw secret string, with an explicit name
+use gcp_secret api-token@3            # a specific version, the default is latest
 ```
 
-### use_gcp_secret
+### use gcp_secret
 
 | Argument | Result |
 |----------|--------|
@@ -106,9 +106,9 @@ use_gcp_secret api-token@3            # a specific version, the default is lates
 | `NAME=db-url` | The raw secret string, exported as `NAME` |
 | `db-url@3` | Version 3 of the secret. Without `@`, the latest version is read |
 
-Variable names are uppercased, and characters outside `A-Z`, `0-9` and `_` become `_`. The secret is read with `gcloud secrets versions access`, so it uses the project in `CLOUDSDK_CORE_PROJECT`, which `use_gcp_project` sets, or else the project of the active gcloud configuration.
+Variable names are uppercased, and characters outside `A-Z`, `0-9` and `_` become `_`. The secret is read with `gcloud secrets versions access`, so it uses the project in `CLOUDSDK_CORE_PROJECT`, which `use gcp_project` sets, or else the project of the active gcloud configuration.
 
-### use_gcp_project
+### use gcp_project
 
 Sets `CLOUDSDK_CORE_PROJECT`, which `gcloud` reads, and `GOOGLE_CLOUD_PROJECT`, which the client libraries read. Both override the active gcloud configuration for that directory.
 
